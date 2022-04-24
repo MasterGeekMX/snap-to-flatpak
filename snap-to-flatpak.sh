@@ -142,8 +142,8 @@ echo -e "\nTHIRD STEP: Deactivation of snap"
 echo -e "\nStopping and deactivating snap services...\n"
 tput sgr0
 
-sudo systemctl stop snapd.socket
-sudo systemctl stop snapd.service
+sudo systemctl stop snapd.socket -T
+sudo systemctl stop snapd.service -T
 sudo systemctl disable snapd.service
 
 tput bold
