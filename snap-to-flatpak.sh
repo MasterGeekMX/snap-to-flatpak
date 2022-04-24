@@ -4,7 +4,12 @@
 # A BASH script that removes Snap from an Ubuntu system and replaces it with Flatpak
 # By MasterGeek.MX
 
+# There is a saying: "Do to others as you would have them do to you" (Matthew 7:12),
+# So this code, as my other works, is heavly commented and explained so others
+# can learn from it, no matter their level.
+
 # Before everything, a warning and a prompt for good measure.
+# Oh, and all those 'tput' things are for switching between bold and normal text
 
 tput bold
 echo ""
@@ -17,6 +22,8 @@ echo ""
 #ring 3 times the terminal by sending the bell character
 for i in {1..3}
 do
+	# -e tells echo to read the Escape characters.
+	# -n tells it to not put a Newline after printing.
 	echo -e -n "\a"
 	sleep .2
 done
@@ -59,37 +66,40 @@ echo -e "${snap_list[@]}\n"
 # Now we are going through that array and remove each snap package from it.
 # Snap doesn't let you remove a snap that is a dependency, and unfortunately,
 # snap doesn't offer an option (that I know) to list dependencies, so we are
-# going to iterate over the array and try each snap. If it could be removed,
-# then we pop it out of the list and start all over again. I know it is
-# not efficient, but it is what I have for the moment.
+# going to iterate over the array and try each snap. If it was removed,
+# then we pop it out of the list abd continue, then we start all over again.
+# I know it is not efficient, but it is what I have for the moment.
 
 snap_count=${#snap_list[@]}
 
-#while the list of snaps isn't empty
+#while the list of snaps isn't empty...
 while [[ $snap_count -gt 0 ]]
 do
 	#move an index in the range of elements on the snap list
 	for ((index=0; index<snap_count; index++)) #index in ${!snap_list[@]}
 	do
+		#keep track of the snap we are working on in a variable with an easier name
+		current_snap=${snap_list[$index]}
 		#remove the snap indicated by the index, and discard the error message if it couldn't be removed
-		sudo snap remove --purge ${snap_list[$index]} 2> /dev/null
+		sudo snap remove --purge $current_snap 2> /dev/null
 		#if the last command was successful (the snap could be removed)...
 		if [[ $? -eq 0 ]]
 		then
-			#create a new snap list without the removed snap
+			#create a new empty list for the updated snap list
 			declare -a new_snap_list=()
 			#go in each snap on the list
 			for snap in ${snap_list[@]}
 			do
-				#if the current snap in the list isn't the one we removed...
-				if [[ $snap != ${snap_list[$index]} ]]
+				#if the snap in the list isn't the one we removed...
+				if [[ $snap != $current_snap ]]
 				then
-					#then add the current snap into the new list
+					#add the snap into the new list
 					new_snap_list+=($snap)
 				fi
 			done
 			#replace the old list with the updated one
 			snap_list=(${new_snap_list[@]})
+			#and update the count of snaps
 			snap_count=${#snap_list[@]}
 		fi
 	done
@@ -113,6 +123,9 @@ do
 	then
 		echo -e "\n$directory:\n"
 		tput sgr0
+		# -r tells rm to be Recursive; betting inside each directory and removing stuff inside
+		# -f tells rm to don't ask about removing a file and Forces it's removal
+		# -v tells rm to be Verbose and print each thing it deletes.
 		sudo rm -rfv "$directory"
 		tput bold
 	fi
@@ -129,11 +142,12 @@ echo -e "\nTHIRD STEP: Deactivation of snap"
 echo -e "\nStopping and deactivating snap services...\n"
 tput sgr0
 
-sudo systemctl stop snapd
-sudo systemctl disable snapd
+sudo systemctl stop snapd.socket
+sudo systemctl stop snapd.service
+sudo systemctl disable snapd.service
 
 tput bold
-echo -e "\nRemoving and banishing snap...\n"
+echo -e "\nRemoving and holding snap...\n"
 tput sgr0
 
 sudo apt autoremove --purge snapd gnome-software-plugin-snap --assume-yes
@@ -214,10 +228,9 @@ fi
 
 #install the corresponding backend for flatpaks
 
-echo -e "\nInstalling the corresponding flatpak backend\n"
-
 if [[ $appstore != "none" ]]
 then
+	echo -e "\nInstalling the corresponding flatpak backend\n"
 	if [[ $appstore == "discover" ]]
 	then
 		tput sgr0
