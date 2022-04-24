@@ -10,11 +10,11 @@ It also asks the user if they would like to install an App Store that can downlo
 
 1. Download the `snap-to-flatpak.sh` file from the Releases section.
 
-2. Make it executable by right clicking the file and selecting the adequate option.
+2. Go to the folder in which you downloaded the script and make it executable.
 
 3. Open a terminal inside the folder in which you downloaded the script.
 
-4. Run it and follow the sintructions on the terminal.
+4. Run it with `./snap-to-flatpak.sh` and follow the intructions on the terminal.
 
 # Terminal-only instructions
 
@@ -42,4 +42,4 @@ chmod +x snap-to-flatpak.sh
 ./snap-to-flatpak.sh
 ```
 
-5. Follow the instructions on the terminal
+5. Follow the instructions

@@ -196,8 +196,9 @@ then
 	then
 		echo -e "\nNeat! the options are GNOME Software and KDE Discover"
 		echo "if you don't have an idea of what to choose,"
-		echo "Discover works best if you use KDE Plasma (Kubuntu) or LXQt (Lubuntu),"
-		echo "and GNOME Software for pretty much everything else."
+		echo "Discover works best if you use KDE Plasma (Kubuntu/Ubuntu Studio) or LXQt (Lubuntu),"
+		echo "and GNOME Software for pretty much everything else:"
+		echo "GNOME (regular Ubuntu), xfce (Xubuntu), Mate (Ubuntu Mate/Kylin), Budgie (Ubuntu Budgie)..."
 
 		echo -e "\nSelect the number of the App Store you would like to have:"
 		select appstore_to_install in KDE-Discover GNOME-Software
@@ -249,7 +250,7 @@ then
 	fi
 fi
 
-echo -e "\nWe are done! snap is no more.\n"
+echo -e "\nWe are done! snap is no more, and flatpak is in.\n"
 echo "check the list of the apps that were installed as snap in case"
 echo "you want them reinstalled in flatpak/apt format, like Firefox."
 echo -e "Now, restart your computer to finish the setup of Flatpak\n"
