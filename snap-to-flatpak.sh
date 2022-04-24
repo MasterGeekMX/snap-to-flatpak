@@ -166,7 +166,7 @@ echo -e "\nInstalling flatpak and setting up Flathub repository...\n"
 tput sgr0
 
 sudo apt install flatpak --assume-yes
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 # we are going to detect if the user has a GUI app store compatible with Flatpak
 # (currently only GNOME software and KDE's Discover support flatpak).
