@@ -235,7 +235,7 @@ fi
 if [[ $appstore != "none" ]]
 then
 	tput bold
-	echo -e "\nInstalling the corresponding flatpak backend\n"
+	echo -e "\nInstalling the corresponding flatpak backend...\n"
 	tput sgr0
 	if [[ $appstore == "discover" ]]
 	then
