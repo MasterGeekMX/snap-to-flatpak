@@ -150,7 +150,10 @@ tput bold
 echo -e "\nRemoving and holding snap...\n"
 tput sgr0
 
-sudo apt autoremove --purge snapd gnome-software-plugin-snap --assume-yes
+#we use autoremove because it will also remove other releated packages.
+#purge is for also removing config files.
+sudo apt autoremove --purge snapd --assume-yes
+#marking a package as held prevents it from being installed/uninstalled
 sudo apt-mark hold snapd
 
 tput bold
@@ -248,6 +251,6 @@ fi
 
 echo -e "\nWe are done! snap is no more.\n"
 echo "check the list of the apps that were installed as snap in case"
-echo "you want them in flatpak/apt format, like Firefox."
+echo "you want them reinstalled in flatpak/apt format, like Firefox."
 echo -e "Now, restart your computer to finish the setup of Flatpak\n"
 tput sgr0
