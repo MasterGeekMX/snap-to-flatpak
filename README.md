@@ -10,7 +10,7 @@ It also asks the user if they would like to install an App Store that can downlo
 
 1. Download the `snap-to-flatpak.sh` file from the Releases section.
 
-
+![Instructional image 1](/images/1-downloading-script.png "How to donwload the script from the releases")
 
 2. Go to the folder in which you downloaded the script and mark it as an executable file.
 
