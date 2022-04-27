@@ -187,7 +187,7 @@ fi
 if [[ $appstore == "none" ]]
 then
 	tput bold
-	echo "You can install flatpaks with the terminal, but there is the option"
+	echo -e "\nYou can install flatpaks with the terminal, but there is the option"
 	echo "of using a graphical App Store to do it more comfortably."
 
 	read -p "Do you want to install an App Store program? [y/n]: " use_appstore
