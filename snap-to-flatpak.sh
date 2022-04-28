@@ -30,7 +30,7 @@ done
 
 read -p "Are you sure [y/n]: " confirmation
 
-if [[ "$confirmation" =~ [Nn]o? ]]
+if [[ ! "$confirmation" =~ [Yy](es)?$ ]]
 then
 	echo -e "\nOK, nothing was done.\n"
 	tput sgr0
@@ -107,27 +107,35 @@ done
 
 tput bold
 echo -e "\nall snaps were removed"
-echo -e "\nSECOND STEP: Cleanup"
+echo -e "\nSECOND STEP: Directory cleanup"
 
 # Now we are going to remove files left by snaps.
 # It is easier to make a list of possible directories.
 # Contributors: feel free to add others that I missed.
 
-echo -e "\nRemoving files left behind in:"
-
 declare -a directories=("$HOME/snap" "/snap" "/var/snap" "/var/lib/snap" "/var/cache/snapd" "/usr/lib/snapd")
 
 for directory in ${directories[@]}
 do
-	if [[ -d $directory ]]
+	if [[ -d $directory ]] #check if directory exists
 	then
-		echo -e "\n$directory:\n"
-		tput sgr0
-		# -r tells rm to be Recursive; betting inside each directory and removing stuff inside
-		# -f tells rm to don't ask about removing a file and Forces it's removal
-		# -v tells rm to be Verbose and print each thing it deletes.
-		sudo rm -rfv "$directory"
-		tput bold
+		echo ""
+		read -p "Do you want to completely remove the directory $directory? [y/n]: " rm_confirmation
+
+		if [[ ! $rm_confirmation =~ [Yy](es)?$ ]]
+		then
+			echo -e "\nOK. $directory is left untouched."
+		else
+			echo -e "\nRemoving $directory\n"
+			tput sgr0
+			# -r tells rm to be Recursive; betting inside each directory and removing stuff inside
+			# -f tells rm to don't ask about removing a file and Forces it's removal
+			# -v tells rm to be Verbose and print each thing it deletes.
+			sudo rm -rfv "$directory"
+			tput bold
+		fi
+
+		unset $rm_confirmation
 	fi
 done
 
@@ -192,7 +200,7 @@ then
 
 	read -p "Do you want to install an App Store program? [y/n]: " use_appstore
 
-	if [[ $use_appstore =~ [Yy](es)? ]]
+	if [[ $use_appstore =~ [Yy](es)?$ ]]
 	then
 		echo -e "\nNeat! the options are GNOME Software and KDE Discover"
 		echo "if you don't have an idea of what to choose,"
