@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# snap-to-flat script Version 1.0
+# snap-to-flat script Version 1.1
 # A BASH script that removes Snap from an Ubuntu system and replaces it with Flatpak
 # By MasterGeek.MX
 
