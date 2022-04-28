@@ -9,7 +9,7 @@
 # can learn from it, no matter their level.
 
 # Before everything, a warning and a prompt for good measure.
-# Oh, and all those "tput" things are for switching between bold and normal text
+# Oh, and all those 'tput' things are for switching between bold and normal text
 
 tput bold
 echo ""
@@ -50,7 +50,7 @@ tput sgr0
 
 snaps=$(snap list | tail --lines +2 | cut --field 1 --delimiter " ")
 
-#now some hoops because `snaps` isn"t a proper bash array (for some reason i don't know yet)
+#now some hoops because `snaps` isn't a proper bash array (for some reason i don't know yet)
 declare -a snap_list=()
 
 for snap in $snaps
@@ -64,8 +64,8 @@ tput sgr0
 echo -e "${snap_list[@]}\n"
 
 # Now we are going through that array and remove each snap package from it.
-# Snap doesn"t let you remove a snap that is a dependency, and unfortunately,
-# snap doesn"t offer an option (that I know) to list dependencies, so we are
+# Snap doesn't let you remove a snap that is a dependency, and unfortunately,
+# snap doesn't offer an option (that I know) to list dependencies, so we are
 # going to iterate over the array and try each snap. If it was removed,
 # then we pop it out of the list abd continue, then we start all over again.
 # I know it is not efficient, but it is what I have for the moment.
@@ -80,7 +80,7 @@ do
 	do
 		#keep track of the snap we are working on in a variable with an easier name
 		current_snap=${snap_list[$index]}
-		#remove the snap indicated by the index, and discard the error message if it couldn"t be removed
+		#remove the snap indicated by the index, and discard the error message if it couldn't be removed
 		sudo snap remove --purge $current_snap 2> /dev/null
 		#if the last command was successful (the snap could be removed)...
 		if [[ $? -eq 0 ]]
@@ -90,7 +90,7 @@ do
 			#go in each snap on the list
 			for snap in ${snap_list[@]}
 			do
-				#if the snap in the list isn"t the one we removed...
+				#if the snap in the list isn't the one we removed...
 				if [[ $snap != $current_snap ]]
 				then
 					#add the snap into the new list
@@ -129,7 +129,7 @@ do
 			echo -e "\nRemoving $directory\n"
 			tput sgr0
 			# -r tells rm to be Recursive; betting inside each directory and removing stuff inside
-			# -f tells rm to don't ask about removing a file and Forces it"s removal
+			# -f tells rm to don't ask about removing a file and Forces it's removal
 			# -v tells rm to be Verbose and print each thing it deletes.
 			sudo rm -rfv "$directory"
 			tput bold
@@ -144,7 +144,7 @@ echo -e "\nFiles removed"
 echo -e "\nTHIRD STEP: Deactivation of snap"
 
 # Now we are going to remove snap, first by stopping and deactivating
-# it"s services, and then uninstalling it. Finally we are going
+# it's services, and then uninstalling it. Finally we are going
 # to tell APT to hold the package snapd, ignoring it from installations.
 
 echo -e "\nStopping and deactivating snap services...\n"
@@ -168,7 +168,7 @@ tput bold
 echo -e "\nSnap removed"
 echo -e "\nFOURTH STEP: installing and setting up Flatpak"
 
-# Here I"m simply following what it says on https://flatpak.org/setup/Ubuntu
+# Here I'm simply following what it says on https://flatpak.org/setup/Ubuntu
 
 echo -e "\nInstalling flatpak and setting up Flathub repository...\n"
 tput sgr0
@@ -177,7 +177,7 @@ sudo apt install flatpak --assume-yes
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 # we are going to detect if the user has a GUI app store compatible with Flatpak
-# (currently only GNOME software and KDE"s Discover support flatpak).
+# (currently only GNOME software and KDE's Discover support flatpak).
 # If the user does not have neither installed, a prompt suggesting them will appear.
 
 #detect if gnome-software or plasma-discover is available
