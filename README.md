@@ -1,51 +1,64 @@
 # Snap-to-Flatpak
 
-A BASH script that removes Snap from an Ubuntu system and replaces it with Flatpak
+A [BASH](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) script that removes [**Snap**](https://ubuntu.com/blog/whats-in-a-snap) from an [Ubuntu](https://ubuntu.com)/Ubuntu-based system and replaces it with [**Flatpak**](https://flatpak.org).
 
-It also asks the user if they would like to install an App Store that can download flatpaks in case there is none installed on the system.
+It also asks the user if they would like to install an App Store that can download Flatpaks in case there is none installed on the system.
 
-(Currently only GNOME Software and KDE Discover support flatpaks)
+(*Currently only [GNOME Software](https://wiki.gnome.org/Apps/Software) and [KDE Discover](https://apps.kde.org/discover/) support Flatpaks*)
 
-# Simple (A.K.A. noob-friendly) Instructions
+#
 
-1. Download the `snap-to-flatpak.sh` file from the Releases section.
+<details><!--Clickable dropdown for simple instructions-->
+ <summary>
+  <h1>Simple (noob friendly) Instructions | <-Click to expand</h1><!--Use <h1> tag because Markdown does not work in summaries.-->
+ </summary>
 
-![Instructional image 1](/images/1-downloading-script.png "How to donwload the script from the releases")
+ 1. Download the `snap-to-flatpak.sh` file from the Releases section.
 
-2. Go to the folder in which you downloaded the script and mark it as an executable file.
+ ![Instructional image 1](/images/1-downloading-script.png "How to donwload the script from the releases")
 
-![Instructional image 2](/images/2-marking-as-executable.png "How to mark it as executable in different Flavours")
+ 2. Go to the folder in which you downloaded the script and mark it as an executable file.
 
-3. Open a terminal inside the folder in which you downloaded the script and run it with `./snap-to-flatpak.sh`
+ ![Instructional image 2](/images/2-marking-as-executable.png "How to mark it as executable in different Flavours")
 
-![Instructional image 3](/images/3-run-and-follow.png "How to open a terminal and run the script in different Flavours")
+ 3. Open a terminal inside the folder in which you downloaded the script and run it with `./snap-to-flatpak.sh`
 
-4. Follow the intructions on the terminal.
+ ![Instructional image 3](/images/3-run-and-follow.png "How to open a terminal and run the script in different Flavours")
 
-# Terminal-only instructions
+ 4. Follow the instructions in the terminal.
 
-1. Clone the repo:
+</details>
 
-```
-git clone https://github.com/MasterGeekMX/snap-to-flatpak.git
-```
 
-2. Move into the cloned repo folder:
+<details>
+ <summary>
+  <h1>Terminal-only Instructions | <-Click to expand</h1>
+ </summary>
 
-```
-cd snap-to-flatpak
-```
+ 1. Clone the repo:
 
-3. Make the script executable
+ ```
+ git clone https://github.com/MasterGeekMX/snap-to-flatpak.git
+ ```
 
-```
-chmod +x snap-to-flatpak.sh
-```
+ 2. Move into the cloned repo folder:
 
-4. Run the script
+ ```
+ cd snap-to-flatpak
+ ```
 
-```
-./snap-to-flatpak.sh
-```
+ 3. Make the script executable
 
-5. Follow the instructions
+ ```
+ chmod +x snap-to-flatpak.sh
+ ```
+
+ 4. Run the script
+
+ ```
+ ./snap-to-flatpak.sh
+ ```
+
+ 5. Follow the instructions in the terminal.
+
+</details>
