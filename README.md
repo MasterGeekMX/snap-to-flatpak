@@ -40,7 +40,9 @@ It also asks the user if they would like to install an App Store that can downlo
  ```
  git clone https://github.com/MasterGeekMX/snap-to-flatpak.git
  ```
-
+ 
+ + NOTE: if you don't have git installed, do it by running `sudo apt install git`
+  
  2. Move into the cloned repo folder:
 
  ```
