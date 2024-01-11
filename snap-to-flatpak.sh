@@ -74,8 +74,8 @@ print "\nStopping snap services...\n"
 # systemctl is the program that allows service management.
 # stopping a service means halting it on the spot.
 # the --show-transaction is only to make it more verbose
-sudo systemctl stop snapd.socket --show-transaction
 sudo systemctl stop snapd.service --show-transaction
+sudo systemctl stop snapd.socket --show-transaction
 sudo systemctl stop snapd.seeded.service --show-transaction
 
 # in order to process the snaps we get a list of all the snaps on the system and store it on a bash array.
@@ -145,7 +145,7 @@ do
 done
 
 print "\n--------------------------------------------------------------------------------\n"
-print "SECOND STEP: Deactivation and removal of snap"
+print "SECOND STEP: Removal of snap"
 
 # Now we are going to remove snap by uninstalling it. Then we are going
 # to tell APT to hold the package snapd, ignoring it from installations.
@@ -156,11 +156,31 @@ print "\nRemoving snap completely...\n"
 # and the --assume-yes to do the uninstalling automatically instead of asking the user to confirm
 sudo apt autoremove --purge snapd --assume-yes
 
-print "\nMarking snap as held so it cannot be reinstalled\n"
+print "\nMarking snap as a hold package so it cannot be reinstalled\n"
 sudo apt-mark hold snapd
 
+# now we are going to make some APT configuration files to avoid the installation of snap and
+# the infamous firefox apt package that installs the snap version
+print "\nGenerating APT configuration files\n"
+
+# we use the tee program that takes some text as input and then prints it on the screen at the same time it writes that
+# into a file. We use it because it can be called with elevated permissions (unlike >) and to show the contents of the config file to the user
+
+# the package and pin-priority fielsds are quite self-explainatory, but the pin not so much.
+# release means that the package comes from a given release of a distro.
+# the a= parameter refers to the name of the archive of that release. '*'' refers to all.
+# the o= parameter refers to the origin of a package (who makes it). 'Ubuntu*' referes to things packaged by Ubuntu.
+echo -e "generating file '/etc/apt/preferences.d/no-snap-please' with the following contents:\n"
+echo "Package: snapd
+Pin: release a=*
+Pin-Priority: -1" | sudo tee /etc/apt/preferences.d/no-snap-please
+
+echo -e "\nGenerating the file '/etc/apt/preferences/no-firefox-as-a-snap-please' with the following contents:\n"
+echo "Package: firefox*
+Pin: release o=Ubuntu*
+Pin-Priority: -1" | sudo tee /etc/apt/preferences/no-firefox-as-a-snap-please
+
 print "\nSnap removed"
-print "\nall snaps were removed"
 
 print "\n--------------------------------------------------------------------------------\n"
 print "THIRD STEP: Directory cleanup"
