@@ -146,8 +146,8 @@ print "\nStopping snap services...\n"
 # systemctl is the program that allows service management.
 # stopping a service means halting it on the spot.
 # the --show-transaction is only to make it more verbose
-sudo systemctl stop snapd.service --show-transaction
 sudo systemctl stop snapd.socket --show-transaction
+sudo systemctl stop snapd.service --show-transaction
 sudo systemctl stop snapd.seeded.service --show-transaction
 
 print "\nRemoving snap completely...\n"
