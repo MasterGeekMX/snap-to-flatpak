@@ -175,10 +175,10 @@ echo "Package: snapd
 Pin: release a=*
 Pin-Priority: -1" | sudo tee /etc/apt/preferences.d/no-snap-please
 
-echo -e "\nGenerating the file '/etc/apt/preferences/no-firefox-as-a-snap-please' with the following contents:\n"
+echo -e "\nGenerating the file '/etc/apt/preferences/no-firefox-snap-please' with the following contents:\n"
 echo "Package: firefox*
 Pin: release o=Ubuntu*
-Pin-Priority: -1" | sudo tee /etc/apt/preferences/no-firefox-as-a-snap-please
+Pin-Priority: -1" | sudo tee /etc/apt/preferences/no-firefox-snap-please
 
 print "\nSnap removed"
 
@@ -205,14 +205,14 @@ do
 		# check the user's answer and either do nothing or proceed with the removal
 		if answer_affirmative $rm_confirmation
 		then # answer was affirmative. Remove the directory completely
-			print "Removing $directory"
+			print "\nRemoving $directory\n"
 			# --recursive tells rm to get inside each subdirectory and remove everything inside
 			# --force tells rm to don't ask about removing a file and Forces it's removal
 			# --verbose tells rm to print each thing it deletes.
 			sudo rm --recursive --force --verbose "$directory"
 		else
 			# answer was negative. Don't remove the directory
-			print "OK. $directory is left untouched."
+			print "\nOK. $directory is left untouched\n"
 		fi
 
 		unset $rm_confirmation
@@ -300,7 +300,7 @@ fi
 # check if there is even an app store to work with in the first place
 if [[ $appstore != "none" ]]
 then
-	print "\nInstalling the corresponding flatpak backend for $appstore_to_install...\n"
+	print "\nInstalling the corresponding flatpak backend for $(echo $appstore_to_install | tr --delete "-")...\n"
 	if [[ $appstore == "GNOME" ]]
 	then
 		sudo apt install gnome-software-plugin-flatpak --assume-yes
