@@ -300,7 +300,7 @@ fi
 # check if there is even an app store to work with in the first place
 if [[ $appstore != "none" ]]
 then
-	print "\nInstalling the corresponding flatpak backend for $(echo $appstore_to_install | tr --delete "-")...\n"
+	print "\nInstalling the corresponding flatpak backend for $appstore...\n"
 	if [[ $appstore == "GNOME" ]]
 	then
 		sudo apt install gnome-software-plugin-flatpak --assume-yes
