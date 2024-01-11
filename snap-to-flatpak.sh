@@ -180,6 +180,9 @@ echo "Package: firefox*
 Pin: release o=Ubuntu*
 Pin-Priority: -1" | sudo tee /etc/apt/preferences.d/no-firefox-snap-please
 
+print "\nUpdate APT repos so changes take effec\n"
+sudo apt update
+
 print "\nSnap removed"
 
 print "\n--------------------------------------------------------------------------------\n"
