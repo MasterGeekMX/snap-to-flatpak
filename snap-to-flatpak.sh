@@ -135,9 +135,32 @@ do
 	done
 done
 
+print "\SECOND STEP: Deactivation and removal of snap\n"
+
+# Now we are going to remove snap, first by stopping and deactivating
+# it's services, and then uninstalling it. Finally we are going
+# to tell APT to hold the package snapd, ignoring it from installations.
+
+print "Stopping snap services...\n"
+# systemctl is the program that allows service management.
+# stopping a service means halting it on the spot.
+# the --show-transaction is only to make it more verbose
+sudo systemctl stop snapd.socket --show-transaction
+sudo systemctl stop snapd.service --show-transaction
+
+print "\nRemoving snap completely...\n"
+# we use autoremove because it will also remove other related packages.
+# the --purge options is for also removing configuration files,
+# and the --assume-yes to do the uninstalling automatically instead of asking the user to confirm
+sudo apt autoremove --purge snapd --assume-yes
+
+print "\nMarking snap as held so it cannot be reinstalled\n"
+sudo apt-mark hold snapd
+
+print "\nSnap removed"
 
 print "\nall snaps were removed"
-print "\nSECOND STEP: Directory cleanup\n"
+print "\THIRD STEP: Directory cleanup\n"
 
 # Now we are going to remove files left by snaps.
 # It is easier to make a list of possible directories than trying to search them dynamically.
@@ -173,29 +196,6 @@ do
 done
 
 print "Files removed"
-print "\nTHIRD STEP: Deactivation of snap"
-
-# Now we are going to remove snap, first by stopping and deactivating
-# it's services, and then uninstalling it. Finally we are going
-# to tell APT to hold the package snapd, ignoring it from installations.
-
-print "\nStopping snap services...\n"
-# systemctl is the program that allows service management.
-# stopping a service means halting it on the spot.
-# the --show-transaction is only to make it more verbose
-sudo systemctl stop snapd.socket --show-transaction
-sudo systemctl stop snapd.service --show-transaction
-
-print "\nRemoving snap completely...\n"
-# we use autoremove because it will also remove other related packages.
-# the --purge options is for also removing configuration files,
-# and the --assume-yes to do the uninstalling automatically instead of asking the user to confirm
-sudo apt autoremove --purge snapd --assume-yes
-
-print "\nMarking snap as held so it cannot be reinstalled\n"
-sudo apt-mark hold snapd
-
-print "\nSnap removed"
 print "\nFOURTH STEP: installing and setting up Flatpak"
 
 # Here I'm simply following what it says on https://flatpak.org/setup/Ubuntu
