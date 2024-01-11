@@ -38,9 +38,6 @@ WARNING: ALL YOUR SNAPS WILL BE DELETED!!!!!!!
 ----------------------------------------------
 "
 
-# send a system notification with high priority and a warning icon
-notify-send --app-name="Snap to Flatpak script" --icon=emblem-warning "Hey, pay attention to what the script says!"
-
 # ring 3 times the terminal by sending the bell character
 for i in {1..3}
 do
@@ -268,7 +265,7 @@ then
 		if you don't have an idea of what to choose,
 		Discover works best if you use KDE Plasma (Kubuntu/Ubuntu Studio) or LXQt (Lubuntu),
 		and GNOME Software for pretty much everything else:
-		GNOME (regular Ubuntu), Xfce (Xubuntu), MATE (Ubuntu Mate/Kylin), Budgie (Ubuntu Budgie)..."
+		GNOME (regular Ubuntu, Edubuntu), Xfce (Xubuntu), MATE (Ubuntu Mate/Kylin), Budgie (Ubuntu Budgie)..."
 
 		# prompt the user with the choices of app store available as numbers
 		print "\nSelect the number of the App Store you would like to have:"
