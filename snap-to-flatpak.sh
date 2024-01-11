@@ -70,14 +70,6 @@ print "\nOK. Proceeding..."
 print "\n--------------------------------------------------------------------------------\n"
 print "FIRST STEP: Removing all the installed snaps"
 
-print "\nStopping snap services...\n"
-# systemctl is the program that allows service management.
-# stopping a service means halting it on the spot.
-# the --show-transaction is only to make it more verbose
-sudo systemctl stop snapd.service --show-transaction
-sudo systemctl stop snapd.socket --show-transaction
-sudo systemctl stop snapd.seeded.service --show-transaction
-
 # in order to process the snaps we get a list of all the snaps on the system and store it on a bash array.
 # Because the command `snap list` puts at the first line a header for each field,
 # we will filter out the first line using `tail` by telling it to start at the second line.
@@ -147,8 +139,16 @@ done
 print "\n--------------------------------------------------------------------------------\n"
 print "SECOND STEP: Removal of snap"
 
-# Now we are going to remove snap by uninstalling it. Then we are going
+# Now we are going to remove snap by stopping it's services and then uninstalling it. Then we are going
 # to tell APT to hold the package snapd, ignoring it from installations.
+
+print "\nStopping snap services...\n"
+# systemctl is the program that allows service management.
+# stopping a service means halting it on the spot.
+# the --show-transaction is only to make it more verbose
+sudo systemctl stop snapd.service --show-transaction
+sudo systemctl stop snapd.socket --show-transaction
+sudo systemctl stop snapd.seeded.service --show-transaction
 
 print "\nRemoving snap completely...\n"
 # we use autoremove because it will also remove other related packages.
