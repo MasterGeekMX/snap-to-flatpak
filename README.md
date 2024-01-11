@@ -4,7 +4,7 @@ A [BASH](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) script that removes [*
 
 It also asks the user if they would like to install an App Store that can download Flatpaks in case there is none installed on the system.
 
-(*Currently only [GNOME Software](https://wiki.gnome.org/Apps/Software) and [KDE Discover](https://apps.kde.org/discover/) support Flatpaks*)
+(*Currently only [GNOME Software](https://apps.gnome.org/Software/) and [KDE Discover](https://apps.kde.org/discover/) support Flatpaks*)
 
 #
 
