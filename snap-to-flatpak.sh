@@ -175,10 +175,10 @@ echo "Package: snapd
 Pin: release a=*
 Pin-Priority: -1" | sudo tee /etc/apt/preferences.d/no-snap-please
 
-echo -e "\nGenerating the file '/etc/apt/preferences/no-firefox-snap-please' with the following contents:\n"
+echo -e "\nGenerating the file '/etc/apt/preferences.d/no-firefox-snap-please' with the following contents:\n"
 echo "Package: firefox*
 Pin: release o=Ubuntu*
-Pin-Priority: -1" | sudo tee /etc/apt/preferences/no-firefox-snap-please
+Pin-Priority: -1" | sudo tee /etc/apt/preferences.d/no-firefox-snap-please
 
 print "\nSnap removed"
 
