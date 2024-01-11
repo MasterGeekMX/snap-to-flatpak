@@ -8,22 +8,46 @@
 # So this code, as my other works, is heavily commented and explained so others
 # can learn from it, no matter their level.
 
-# Let's start by issuing a warning
-# all those 'tput' things are for switching between bold text and normal text (sgr0)
-tput bold
-echo ""
-echo "----------------------------------------------"
-echo "WARNING: ALL YOUR SNAPS WILL BE DELETED!!!!!!!"
-echo " REPEAT: ALL YOUR SNAPS WILL BE DELETED!!!!!!!"
-echo "----------------------------------------------"
-echo ""
+# To make my life easier, I will make a bash function to print texts on the screen with some extras.
+function print(){
+	# First, let's set the text on the teminal with bold text to make emphasis
+	tput bold
+	# I will print the text in hand using echo, but also enabling
+	# special characters like \n(ewline) with the -e parameter.
+	# And because I'm #TeamTabs, delete all tabs from the text
+	# with the translate (tr) program so text inside indentations looks normal.
+	echo -e "$1" | tr --delete "\t"
+	#return the terminal to regular text
+	tput sgr0
+}
+
+# another function, this time is is for checking if the answer to a prompt is yes or no
+function answer_affirmative(){
+	# we will check if the given answer (as a text string) matches some patterns, so we will use regular expressions.
+	# Affirmation can be answered by typing 'Y', 'y', 'Yes' and 'yes'. Any other option fails. First, we check if the text starts
+	# with either upper-case Y or lower-case y. Then we check if there is an 'es' followinfg the Y or not,
+	# and finally we check if we reached the end of the string (marked in regular expressions by a $)
+	[[ "$1" =~ [Yy](es)?$ ]]
+}
+
+# Let's start by issuing a warning in text, notification and sound
+print "
+----------------------------------------------
+WARNING: ALL YOUR SNAPS WILL BE DELETED!!!!!!!
+ REPEAT: ALL YOUR SNAPS WILL BE DELETED!!!!!!!
+----------------------------------------------
+"
+
+# send a system notification with high priority and a warning icon
+notify-send --app-name="Snap to Flatpak script" --icon=emblem-warning "Hey, pay attention to what the script says!"
 
 # ring 3 times the terminal by sending the bell character
 for i in {1..3}
 do
-	# -e tells echo to read the Escape characters.
+	# -e tells echo to read the Escape special characters.
 	# -n tells it to not put a Newline after printing.
 	echo -e -n "\a"
+	# sleep for 0.2 seconds so rings are spaced
 	sleep .2
 done
 
@@ -31,10 +55,9 @@ done
 read -p "Are you sure [y/n]: " confirmation
 
 # if the answer was negative, don't proceed and exit
-if [[ ! $confirmation =~ [Yy](es)?$ ]]
+if ! answer_affirmative $confirmation
 then
-	echo -e "\nOK, nothing was done.\n"
-	tput sgr0
+	print "\nOK, nothing was done.\n"
 	unset $confirmation
 	exit
 fi
@@ -43,9 +66,8 @@ fi
 # it is only a good practice, but not mandatory.
 unset $confirmation
 
-echo -e "\nOK. Proceeding..."
-echo -e "\nFIRST STEP: Removing all the installed snaps"
-tput sgr0
+print "\nOK. Proceeding..."
+print "\nFIRST STEP: Removing all the installed snaps\n"
 
 # First we get a list of all the snaps on the system and store it on a bash array.
 # Because the command `snap list` puts at the first line a header for each field,
@@ -70,11 +92,8 @@ done
 snap_count=${#snap_list[@]}
 
 # print the number and list of snaps installed
-#TODO print the number
-tput bold
-echo -e "\nThe installed snaps are:"
-tput sgr0
-echo -e "${snap_list[@]}\n"
+echo -e "Currently $snap_count snaps are installed"
+echo -e "The installed snaps are:\n${snap_list[@]}\n"
 
 # Now we are going through that array and remove each snap package from it.
 # Snap doesn't let you remove a snap that is a dependency, and unfortunately,
@@ -116,9 +135,9 @@ do
 	done
 done
 
-tput bold
-echo -e "\nall snaps were removed"
-echo -e "\nSECOND STEP: Directory cleanup"
+
+print "\nall snaps were removed"
+print "\nSECOND STEP: Directory cleanup\n"
 
 # Now we are going to remove files left by snaps.
 # It is easier to make a list of possible directories than trying to search them dynamically.
@@ -134,65 +153,54 @@ do
 	if [[ -d $directory ]]
 	then
 		# ...ask the user if they want to remove the directory and it's contents completely
-		echo ""
 		read -p "Do you want to completely remove the directory $directory? [y/n]: " rm_confirmation
 
 		# check the user's answer and either do nothing or proceed with the removal
-		if [[ ! $rm_confirmation =~ [Yy](es)?$ ]]
-		then
-			# answer was negative. Don't remove the directory
-			echo -e "\nOK. $directory is left untouched."
-		else
-			# answer was affirmative. Remove the directory completely
-			echo -e "\nRemoving $directory\n"
-			tput sgr0
+		if answer_affirmative $rm_confirmation
+		then # answer was affirmative. Remove the directory completely
+			print "Removing $directory"
 			# --recursive tells rm to get inside each subdirectory and remove everything inside
 			# --force tells rm to don't ask about removing a file and Forces it's removal
 			# --verbose tells rm to print each thing it deletes.
 			sudo rm --recursive --force --verbose "$directory"
-			tput bold
+		else
+			# answer was negative. Don't remove the directory
+			print "OK. $directory is left untouched."
 		fi
 
 		unset $rm_confirmation
 	fi
 done
 
-tput bold
-echo -e "\nFiles removed"
-echo -e "\nTHIRD STEP: Deactivation of snap"
+print "Files removed"
+print "\nTHIRD STEP: Deactivation of snap"
 
 # Now we are going to remove snap, first by stopping and deactivating
 # it's services, and then uninstalling it. Finally we are going
 # to tell APT to hold the package snapd, ignoring it from installations.
 
-echo -e "\nStopping and deactivating snap services...\n"
-tput sgr0
-
+print "\nStopping snap services...\n"
 # systemctl is the program that allows service management.
 # stopping a service means halting it on the spot.
 # the --show-transaction is only to make it more verbose
 sudo systemctl stop snapd.socket --show-transaction
 sudo systemctl stop snapd.service --show-transaction
 
-tput bold
-echo -e "\nRemoving and holding snap...\n"
-tput sgr0
-
+print "\nRemoving snap completely...\n"
 # we use autoremove because it will also remove other related packages.
 # the --purge options is for also removing configuration files,
 # and the --assume-yes to do the uninstalling automatically instead of asking the user to confirm
 sudo apt autoremove --purge snapd --assume-yes
-# marking a package as held prevents it from being installed/uninstalled. Just in case.
+
+print "\nMarking snap as held so it cannot be reinstalled\n"
 sudo apt-mark hold snapd
 
-tput bold
-echo -e "\nSnap removed"
-echo -e "\nFOURTH STEP: installing and setting up Flatpak"
+print "\nSnap removed"
+print "\nFOURTH STEP: installing and setting up Flatpak"
 
 # Here I'm simply following what it says on https://flatpak.org/setup/Ubuntu
 
-echo -e "\nInstalling flatpak and setting up Flathub repository...\n"
-tput sgr0
+print "\nInstalling flatpak and setting up Flathub repository...\n"
 
 sudo apt install flatpak --assume-yes
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -205,13 +213,12 @@ sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub
 # the `command` command is for running stuff that is not bash functions, but if
 # we pass the -v flag instead it prints the path where the program lives, and nothing if not found.
 # then we check with -x if that path is an executable file. If all is correct, we have found our app store.
-#TODO change the variables to the project name (GNOME and KDE)
 if [[ -x $(command -v gnome-software) ]]
 then
-	appstore="software"
+	appstore="GNOME"
 elif [[ -x $(command -v plasma-discover) ]]
 then
-	appstore="discover"
+	appstore="KDE"
 else
 	appstore="none"
 fi
@@ -219,43 +226,38 @@ fi
 # launch the prompt in case we didn't find a suitable app store
 if [[ $appstore == "none" ]]
 then
-	tput bold
-	echo -e "\nYou can install flatpaks with the terminal, but there is the option"
-	echo "of using a graphical App Store to do it more comfortably."
+	print "\nYou can install flatpaks with the terminal, but there is the option
+	of using a graphical App Store to do it more comfortably.\n"
 
 	# ask the user if they want to install an app store
 	read -p "Do you want to install an App Store program? [y/n]: " use_appstore
 
 	# check the answer to see if we proceed with the app store selection or not.
-	if [[ $use_appstore =~ [Yy](es)?$ ]]
+	if answer_affirmative $use_appstore
 	then
-		echo -e "\nNeat! the options are GNOME Software and KDE Discover"
-		echo "if you don't have an idea of what to choose,"
-		echo "Discover works best if you use KDE Plasma (Kubuntu/Ubuntu Studio) or LXQt (Lubuntu),"
-		echo "and GNOME Software for pretty much everything else:"
-		echo "GNOME (regular Ubuntu), xfce (Xubuntu), Mate (Ubuntu Mate/Kylin), Budgie (Ubuntu Budgie)..."
+		print "\nThe options are GNOME Software and KDE Discover
+		if you don't have an idea of what to choose,
+		Discover works best if you use KDE Plasma (Kubuntu/Ubuntu Studio) or LXQt (Lubuntu),
+		and GNOME Software for pretty much everything else:
+		GNOME (regular Ubuntu), xfce (Xubuntu), MATE (Ubuntu Mate/Kylin), Budgie (Ubuntu Budgie)..."
 
 		# prompt the user with the choices of app store available as numbers
-		echo -e "\nSelect the number of the App Store you would like to have:"
+		print "\nSelect the number of the App Store you would like to have:"
 		select appstore_to_install in GNOME-Software KDE-Discover
 
 		# install the app store the user selected based on it's answer
 		do
 			case $appstore_to_install in
 				"GNOME-Software")
-					echo -e "\nOK. Installing GNOME Software...\n"
-					tput sgr0
+					print "\nOK. Installing GNOME Software...\n"
 					sudo apt install gnome-software --assume-yes
-					appstore="software"
-					tput bold
+					appstore="GNOME"
 					break
 				;;
-								"KDE-Discover")
-					echo -e "\nOK. Installing KDE Discover...\n"
-					tput sgr0
+				"KDE-Discover")
+					print "\nOK. Installing KDE Discover...\n"
 					sudo apt install plasma-discover --assume-yes
-					appstore="discover"
-					tput bold
+					appstore="KDE"
 					break
 				;;
 				*) # the user didn't select a number that corresponds with a valid choice
@@ -264,7 +266,7 @@ then
 			esac
 		done
 	else # the user said no to installing an app store
-		echo -e "\nOK then. No GUI app will be installed."
+		print "\nOK then. No GUI app will be installed."
 	fi
 fi
 
@@ -272,25 +274,21 @@ fi
 # check if there is even an app store to work with in the first place
 if [[ $appstore != "none" ]]
 then
-	tput bold
-	echo -e "\nInstalling the corresponding flatpak backend...\n"
-	tput sgr0
-	if [[ $appstore == "software" ]]
+	print "\nInstalling the corresponding flatpak backend...\n"
+	if [[ $appstore == "GNOME" ]]
 	then
-		tput sgr0
 		sudo apt install gnome-software-plugin-flatpak --assume-yes
-		tput bold
-	elif [[ $appstore == "discover" ]]
+	elif [[ $appstore == "KDE" ]]
 	then
-		tput sgr0
 		sudo apt install plasma-discover-backend-flatpak --assume-yes
-		tput bold
 	fi
 fi
 
+unset $appstore
+
 # finally, tell the user we have finished
-echo -e "\nWe are done! snap is no more, and flatpak is in.\n"
-echo "check the list of the apps that were installed as snap in case"
-echo "you want them reinstalled in flatpak/apt format, like Firefox."
-echo -e "Now, restart your computer to finish the setup of Flatpak\n"
-tput sgr0
+print "\nWe are done! snap is no more, and flatpak is in.
+
+check the list of the apps that were installed as snap in case
+you want them reinstalled in flatpak/apt format, like Firefox.
+Now, restart your computer to finish the setup of Flatpak"
