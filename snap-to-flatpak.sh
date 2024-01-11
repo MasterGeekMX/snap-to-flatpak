@@ -67,7 +67,8 @@ fi
 unset $confirmation
 
 print "\nOK. Proceeding..."
-print "\nFIRST STEP: Removing all the installed snaps\n"
+print "\n--------------------------------------------------------------------------------\n"
+print "FIRST STEP: Removing all the installed snaps"
 
 # First we get a list of all the snaps on the system and store it on a bash array.
 # Because the command `snap list` puts at the first line a header for each field,
@@ -92,7 +93,7 @@ done
 snap_count=${#snap_list[@]}
 
 # print the number and list of snaps installed
-echo -e "Currently $snap_count snaps are installed"
+echo -e "\nCurrently $snap_count snaps are installed"
 echo -e "The installed snaps are:\n${snap_list[@]}\n"
 
 # Now we are going through that array and remove each snap package from it.
@@ -135,13 +136,14 @@ do
 	done
 done
 
-print "\SECOND STEP: Deactivation and removal of snap\n"
+print "\n--------------------------------------------------------------------------------\n"
+print "SECOND STEP: Deactivation and removal of snap"
 
 # Now we are going to remove snap, first by stopping and deactivating
 # it's services, and then uninstalling it. Finally we are going
 # to tell APT to hold the package snapd, ignoring it from installations.
 
-print "Stopping snap services...\n"
+print "\nStopping snap services...\n"
 # systemctl is the program that allows service management.
 # stopping a service means halting it on the spot.
 # the --show-transaction is only to make it more verbose
@@ -158,9 +160,10 @@ print "\nMarking snap as held so it cannot be reinstalled\n"
 sudo apt-mark hold snapd
 
 print "\nSnap removed"
-
 print "\nall snaps were removed"
-print "\THIRD STEP: Directory cleanup\n"
+
+print "\n--------------------------------------------------------------------------------\n"
+print "THIRD STEP: Directory cleanup"
 
 # Now we are going to remove files left by snaps.
 # It is easier to make a list of possible directories than trying to search them dynamically.
@@ -196,7 +199,9 @@ do
 done
 
 print "Files removed"
-print "\nFOURTH STEP: installing and setting up Flatpak"
+
+print "\n--------------------------------------------------------------------------------\n"
+print "FOURTH STEP: installing and setting up Flatpak"
 
 # Here I'm simply following what it says on https://flatpak.org/setup/Ubuntu
 
