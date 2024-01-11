@@ -179,6 +179,7 @@ do
 	if [[ -d $directory ]]
 	then
 		# ...ask the user if they want to remove the directory and it's contents completely
+		echo ""
 		read -p "Do you want to completely remove the directory $directory? [y/n]: " rm_confirmation
 
 		# check the user's answer and either do nothing or proceed with the removal
@@ -198,7 +199,7 @@ do
 	fi
 done
 
-print "Files removed"
+print "\nFiles removed"
 
 print "\n--------------------------------------------------------------------------------\n"
 print "FOURTH STEP: installing and setting up Flatpak"
@@ -244,7 +245,7 @@ then
 		if you don't have an idea of what to choose,
 		Discover works best if you use KDE Plasma (Kubuntu/Ubuntu Studio) or LXQt (Lubuntu),
 		and GNOME Software for pretty much everything else:
-		GNOME (regular Ubuntu), xfce (Xubuntu), MATE (Ubuntu Mate/Kylin), Budgie (Ubuntu Budgie)..."
+		GNOME (regular Ubuntu), Xfce (Xubuntu), MATE (Ubuntu Mate/Kylin), Budgie (Ubuntu Budgie)..."
 
 		# prompt the user with the choices of app store available as numbers
 		print "\nSelect the number of the App Store you would like to have:"
@@ -279,7 +280,7 @@ fi
 # check if there is even an app store to work with in the first place
 if [[ $appstore != "none" ]]
 then
-	print "\nInstalling the corresponding flatpak backend...\n"
+	print "\nInstalling the corresponding flatpak backend for $appstore...\n"
 	if [[ $appstore == "GNOME" ]]
 	then
 		sudo apt install gnome-software-plugin-flatpak --assume-yes
