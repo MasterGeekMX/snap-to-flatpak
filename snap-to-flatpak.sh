@@ -149,6 +149,7 @@ print "\nStopping snap services...\n"
 # the --show-transaction is only to make it more verbose
 sudo systemctl stop snapd.socket --show-transaction
 sudo systemctl stop snapd.service --show-transaction
+sudo systemctl stop snapd.seeded.service --show-transaction
 
 print "\nRemoving snap completely...\n"
 # we use autoremove because it will also remove other related packages.
