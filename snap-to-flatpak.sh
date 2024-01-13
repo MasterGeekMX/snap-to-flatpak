@@ -93,6 +93,10 @@ snap_count=${#snap_list[@]}
 echo -e "\nCurrently $snap_count snaps are installed"
 echo -e "The installed snaps are:\n${snap_list[@]}\n"
 
+# save up the snap list in a text file next to where the scrip is running in case the user wants to consult it.
+snap list > "$(pwd)/snap-list.txt"
+print "The list of snaps has been saved into the text file '$(pwd)/snap-list.txt'\n"
+
 # Now we are going through that array and remove each snap package from it.
 # Snap doesn't let you remove a snap that is a dependency, and unfortunately,
 # snaps doesn't offer an option (that I know) to list dependencies, so we are
@@ -132,6 +136,8 @@ do
 		fi
 	done
 done
+
+print "All snap packages have been removed"
 
 print "\n--------------------------------------------------------------------------------\n"
 print "SECOND STEP: Removal of snap"
@@ -177,7 +183,7 @@ echo "Package: firefox*
 Pin: release o=Ubuntu*
 Pin-Priority: -1" | sudo tee /etc/apt/preferences.d/no-firefox-snap-please
 
-print "\nUpdate APT repos so changes take effec\n"
+print "\nUpdate APT repos so changes take effect\n"
 sudo apt update
 
 print "\nSnap removed"
@@ -263,9 +269,9 @@ then
 	then
 		print "\nThe options are GNOME Software and KDE Discover
 		if you don't have an idea of what to choose,
-		Discover works best if you use KDE Plasma (Kubuntu/Ubuntu Studio) or LXQt (Lubuntu),
+		Discover works best if you use KDE Plasma (Kubuntu, Ubuntu Studio) or LXQt (Lubuntu),
 		and GNOME Software for pretty much everything else:
-		GNOME (regular Ubuntu, Edubuntu), Xfce (Xubuntu), MATE (Ubuntu Mate/Kylin), Budgie (Ubuntu Budgie)..."
+		GNOME (regular Ubuntu, Edubuntu), Xfce (Xubuntu), MATE (Ubuntu Mate, Kylin), etc."
 
 		# prompt the user with the choices of app store available as numbers
 		print "\nSelect the number of the App Store you would like to have:"
