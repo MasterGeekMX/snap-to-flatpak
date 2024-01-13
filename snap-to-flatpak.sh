@@ -137,7 +137,7 @@ do
 	done
 done
 
-print "All snap packages have been removed"
+print "\nAll snap packages have been removed"
 
 print "\n--------------------------------------------------------------------------------\n"
 print "SECOND STEP: Removal of snap"
@@ -268,10 +268,18 @@ then
 	if answer_affirmative $use_appstore
 	then
 		print "\nThe options are GNOME Software and KDE Discover
-		if you don't have an idea of what to choose,
-		Discover works best if you use KDE Plasma (Kubuntu, Ubuntu Studio) or LXQt (Lubuntu),
-		and GNOME Software for pretty much everything else:
-		GNOME (regular Ubuntu, Edubuntu), Xfce (Xubuntu), MATE (Ubuntu Mate, Kylin), etc."
+		if you don't have an idea of what to choose:
+		KDE Discover works best if you use Qt-Based desktops:
+		    • KDE Plasma (Kubuntu, Ubuntu Studio)
+		    • LXQt (Lubuntu)
+		GNOME Software for GTK-based desktops (pretty much everything else):
+		    • GNOME (regular Ubuntu, Edubuntu)
+		    • Budgie (Ubuntu Budgie)
+		    • Cinnamon (Ubuntu Cinnamon)
+		    • MATE (Ubuntu Mate, Kylin)
+		    • Unity (Ubuntu Unity)
+		    • Xfce (Xubuntu)
+		You are free to choose whichever you want and make a mix."
 
 		# prompt the user with the choices of app store available as numbers
 		print "\nSelect the number of the App Store you would like to have:"
